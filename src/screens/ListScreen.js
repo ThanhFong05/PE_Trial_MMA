@@ -4,12 +4,13 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   TouchableOpacity,
   Switch,
   ActivityIndicator,
   TextInput,
+  Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { CustomInput } from '../components/CustomInput';
@@ -327,7 +328,7 @@ export const ListScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView testID="list-screen" style={styles.safeArea}>
+    <SafeAreaView testID="list-screen" edges={['top', 'left', 'right']} style={styles.safeArea}>
       {/* Top Header */}
       <View style={styles.header}>
         <View style={styles.headerUserBox}>
@@ -680,13 +681,14 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingTop: Platform.OS === 'android' ? 8 : 0,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
