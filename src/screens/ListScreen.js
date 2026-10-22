@@ -318,6 +318,14 @@ export const ListScreen = ({ navigation }) => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
   return (
     <SafeAreaView testID="list-screen" style={styles.safeArea}>
       {/* Top Header */}
@@ -328,13 +336,16 @@ export const ListScreen = ({ navigation }) => {
             {user?.email}
           </Text>
         </View>
-        <CustomButton
-          title="Logout"
-          variant="outline"
+        <TouchableOpacity
+          testID="logout-button"
           style={styles.logoutBtn}
-          textStyle={styles.logoutBtnText}
-          onPress={logout}
-        />
+          onPress={handleLogout}
+          activeOpacity={0.7}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Ionicons name="log-out-outline" size={16} color={colors.primary} style={{ marginRight: 4 }} />
+          <Text style={styles.logoutBtnText}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -695,14 +706,19 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   logoutBtn: {
-    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 8,
-    borderColor: colors.border,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
   },
   logoutBtnText: {
     fontSize: 13,
-    color: colors.text,
+    fontWeight: '700',
+    color: colors.primaryDark,
   },
   scrollContent: {
     padding: 16,
