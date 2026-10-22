@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { 
   onAuthStateChanged, 
   signInWithEmailAndPassword, 
@@ -12,9 +12,11 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isRegisteringRef = useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (isRegisteringRef.current) return;
       setUser(currentUser);
       setLoading(false);
     });
@@ -27,7 +29,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (email, password) => {
-    return createUserWithEmailAndPassword(auth, email.trim(), password);
+    isRegisteringRef.current = true;
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
+      await signOut(auth);
+      return cred;
+    } finally {
+      isRegisteringRef.current = false;
+      setUser(null);
+    }
   };
 
   const logout = async () => {

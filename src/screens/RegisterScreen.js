@@ -128,7 +128,11 @@ export const RegisterScreen = ({ navigation }) => {
       setLoading(true);
       await register(email, password);
       setSuccessMessage('Registration successful');
-      // User is now registered and Firebase automatically logs them in
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setSubmitted(false);
+      setErrors({});
     } catch (err) {
       setAuthError(err.message || 'Registration failed. Please try again.');
     } finally {
@@ -161,9 +165,17 @@ export const RegisterScreen = ({ navigation }) => {
 
           {/* Success Message */}
           {successMessage ? (
-            <View testID="form-success" style={styles.successBox}>
-              <Ionicons name="checkmark-circle" size={18} color={colors.success} />
-              <Text style={styles.successText}>{successMessage}</Text>
+            <View style={{ marginBottom: 16 }}>
+              <View testID="form-success" style={styles.successBox}>
+                <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+                <Text style={styles.successText}>{successMessage}</Text>
+              </View>
+              <CustomButton
+                title="Go to Login"
+                variant="outline"
+                onPress={() => navigation.navigate('Login')}
+                style={{ marginTop: 8 }}
+              />
             </View>
           ) : null}
 
